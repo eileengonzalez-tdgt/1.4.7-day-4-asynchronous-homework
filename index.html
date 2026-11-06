@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>1.4.7 | Day 4 Asynchronous Homework | 10 Week English Program</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f9f1ff',
+                            100: '#dbd0e2',
+                            200: '#c8b9d3',
+                            300: '#ad96bd',
+                            400: '#8968a0',
+                            500: '#8968a0',
+                            600: '#8968a0',
+                            700: '#8968a0',
+                            800: '#8968a0',
+                            900: '#2a2c2e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<!-- Custom Styles for Flipcards & Print formatting -->
+<style>
+        /* Helvetica is loaded from the user device or an appropriately licensed webfont. */
+        
+        body {
+            font-family: 'Helvetica Now', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #2a2c2e;
+        }
+
+        /* Perspective for 3D flip card effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            .step-section {
+                display: block !important;
+                page-break-after: always;
+            }
+            .shadow-lg, .shadow-md, .shadow-sm {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1;
+            }
+        }
+
+        .step-section {
+            display: none;
+        }
+
+        .step-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        :root { --subject: #8968a0; --subject-light: #dbd0e2; --ink: #2a2c2e; }
+        /* Master header: deep purple with light-purple controls */
+        .master-header { background:#8968a0 !important; color:#ffffff !important; }
+        .master-header h1 { color:#ffffff !important; }
+        .master-header .brand-badge { background:#dbd0e2 !important; color:#5c3978 !important; }
+        .master-header .header-meta { color:#e0cdf4 !important; }
+        .master-tabs { background:#dbd0e2 !important; border-color:#ad96bd !important; }
+        .master-tabs .nav-tab:not(.bg-brand-600) { color:#2a2c2e !important; }
+        .master-tabs .nav-tab:not(.bg-brand-600):hover { background:#c8b9d3 !important; color:#2a2c2e !important; }
+        .master-tabs .nav-tab.bg-brand-600 { background:#8968a0 !important; color:#fff !important; }
+        .master-header button.bg-brand-600 { background:#dbd0e2 !important; color:#5c3978 !important; }
+        .master-header button.bg-brand-600:hover { background:#c8b9d3 !important; }
+        .key-accuracy-rule { background:#f9f1ff !important; border-left-color:#8968a0 !important; color:#5c3978 !important; }
+
+        html { font-size: 16px; }
+        body, button, input, textarea, select { font-family: 'Helvetica Now', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        button { font-size: 15px; font-weight: 600; }
+        main h2 { font-size: 28px; line-height: 1.25; font-weight: 700; }
+        main h3 { font-size: 22px; line-height: 1.3; font-weight: 600; }
+        main p { line-height: 1.6; }
+        main .text-xs { font-size: 14px; }
+        main .text-sm { font-size: 16px; }
+        main .text-base { font-size: 16px; }
+        main .text-lg { font-size: 18px; }
+        main input, main textarea, main select { background: #fff; color: #2a2c2e; font-size: 16px; }
+        main input:focus, main textarea:focus, main select:focus { outline: 2px solid var(--subject); outline-offset: 2px; }
+        .nav-tab { font-size: 14px; }
+        .nav-tab:focus-visible, button:focus-visible { outline: 3px solid #ad96bd; outline-offset: 2px; }
+        .master-bottom-nav { display:flex; align-items:center; justify-content:space-between; gap:16px; max-width:1152px; margin:0 auto 20px; padding:12px 20px; }
+        .master-bottom-nav button { background:var(--subject); color:white; padding:11px 20px; border-radius:9px; }
+        .master-bottom-nav button:disabled { background:#d9d9d9; color:#54595f; cursor:not-allowed; }
+        #section-progress-label { color:#e2e2e2; font-size:12px; margin-left:12px; white-space:nowrap; }
+        @media (max-width: 768px) { main h2 {font-size:25px;} main h3 {font-size:20px;} .master-bottom-nav {padding:12px;} }
+        @media print { .master-bottom-nav {display:none!important;} .step-section {break-after:auto;page-break-after:auto;} }
+    
+.homework-input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;margin:8px 0 12px} main .question{padding:16px;margin:12px 0;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc}main .question label{display:block;margin:8px 0;cursor:pointer}main .question input[type=radio]{margin-right:8px;accent-color:#8968a0} main .feedback:not(.hide){padding:12px;margin:10px 0;background:#f8fafc;border-left:4px solid #8968a0;border-radius:6px;white-space:pre-line}main .hide{display:none!important}main .check{display:flex;gap:10px;align-items:flex-start;margin:9px 0}main .check input{margin-top:6px;accent-color:#8968a0}main textarea{width:100%;min-height:110px;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:8px 0 14px}main .good{color:#166534}main .bad{color:#b91c1c}main .hint{background:#f9f1ff;border-left:4px solid #8968a0;padding:16px;border-radius:8px;margin:14px 0}main .homework-action{background:#8968a0;color:white;padding:11px 19px;border-radius:10px;margin:10px 8px 10px 0}main .homework-action:hover{background:#71558a}main details{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin:12px 0}main details summary{cursor:pointer;font-weight:600}main .mini{font-size:14px}main .muted{color:#64748b}main .pill{display:inline-block;background:#dbd0e2;color:#5c3978;border-radius:30px;padding:5px 12px;font-weight:700;font-size:14px;margin-bottom:12px}main .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}main svg#familyScene{width:100%;max-height:350px}main .progress{height:9px;background:#e2e8f0;border-radius:30px;overflow:hidden;margin:10px 0}main .progress>div{height:100%;background:#8968a0;width:0;transition:width .3s}main a{color:#5c3978;text-decoration:underline}main input[type=text],main input[type=url]{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px}main fieldset{border:0;padding:0}main legend.hide{position:absolute;left:-9999px;display:block!important} @media print{main button.homework-action{display:none!important}}
+</style>
+<style>
+.road-shell{margin-top:1rem}.road-hud{display:flex;justify-content:space-between;gap:12px;font-weight:700;margin-bottom:8px}.road-question{background:#f9f1ff;border:1px solid #dbd0e2;border-radius:12px;padding:15px;font-weight:700;text-align:center;margin-bottom:10px;min-height:68px}.road-stage{position:relative;aspect-ratio:600/420;border-radius:14px;overflow:hidden;border:1px solid #c8b9d3;background:#4c9a52}.road-stage svg{width:100%;height:100%;display:block}.road-sign{position:absolute;top:3%;width:43%;min-height:62px;border:3px solid white;border-radius:10px;background:#285d44;color:white;font-weight:700;font-size:clamp(12px,2vw,17px);padding:8px;box-shadow:0 3px 10px #0005;cursor:pointer;z-index:2;overflow-wrap:anywhere}.road-sign:disabled{opacity:.75;cursor:wait}#roadLeft{left:3%}#roadRight{right:3%}.road-sign.ok{background:#16803a}.road-sign.bad{background:#b42318}.road-controls{display:flex;justify-content:center;gap:12px;margin:12px 0}.road-controls button{background:#4b286d;color:white;border-radius:9px;padding:12px 20px;font-weight:700}.road-overlay{position:absolute;inset:0;background:#171329d9;display:flex;align-items:center;justify-content:center;z-index:3;padding:14px}.road-overlay.hide{display:none}.road-modal{background:white;border-radius:14px;padding:22px;text-align:center;max-width:430px;width:100%;max-height:100%;overflow:auto}.road-modal h3{color:#2a2c2e}.question-card{padding:15px;margin:12px 0;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc}.question-card label{display:block;margin:8px 0;cursor:pointer}.question-card input{margin-right:9px}.question-card .why{margin-top:8px;padding:9px;border-radius:8px;background:#fff}.feedback{margin-top:12px}.homework-action.secondary{background:#e9e3ef;color:#4b286d;margin-left:8px}.road-shell .road-controls button:focus-visible,.road-sign:focus-visible{outline:4px solid #fbbf24;outline-offset:2px}@media(prefers-reduced-motion:reduce){.road-stage *{animation:none!important;transition:none!important}}@media print{.road-controls,.road-overlay,.road-sign{display:none!important}.step-section{display:block!important;break-inside:avoid}}
+</style></head>
+<body class="min-h-screen flex flex-col">
+<!-- TOP HEADER & NAVIGATION -->
+<header class="master-header text-white sticky top-0 z-50 shadow-md no-print">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<!-- Branding -->
+<div class="flex items-center space-x-3">
+<div class="brand-badge bg-[#dbd0e2] text-[#4b286d] font-bold p-2 rounded-lg text-sm tracking-wide">
+                        10W
+                    </div>
+<div>
+<h1 class="font-bold text-lg leading-tight">Lesson 1.4.7: Asynchronous Homework</h1>
+<p class="header-meta text-xs font-medium text-[#e0cdf4]">10 Week English Program · Day 4 · Asynchronous Homework · CEFR A2–B1 · 76 min</p>
+</div>
+</div>
+<!-- Print & Export Action -->
+<button class="flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-lg transition-colors" onclick="window.print()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="hidden sm:inline">Print / Save PDF</span>
+</button>
+</div>
+</div>
+<!-- Progress Bar -->
+<div aria-label="Lesson section progress" aria-valuemax="7" aria-valuemin="0" aria-valuenow="1" class="w-full bg-[#ad96bd] h-1.5" id="progress-track" role="progressbar">
+<div class="bg-brand-500 h-full transition-all duration-300" id="progress-bar" style="width:14.2857%"></div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="master-tabs bg-[#dbd0e2] border-t border-[#ad96bd] overflow-x-auto">
+<div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-2 py-2 text-xs sm:text-sm whitespace-nowrap"><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-white bg-brand-600" id="tab-0" onclick="switchStep(0)">Overview</button><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-slate-300 hover:text-white hover:bg-slate-700" id="tab-1" onclick="switchStep(1)">1. Speaking (15m)</button><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-slate-300 hover:text-white hover:bg-slate-700" id="tab-2" onclick="switchStep(2)">2. Modals (18m)</button><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-slate-300 hover:text-white hover:bg-slate-700" id="tab-3" onclick="switchStep(3)">3. Reading (12m)</button><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-slate-300 hover:text-white hover:bg-slate-700" id="tab-4" onclick="switchStep(4)">4. Listening (15m)</button><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-slate-300 hover:text-white hover:bg-slate-700" id="tab-5" onclick="switchStep(5)">5. Writing (10m)</button><button class="nav-tab px-3 py-1.5 rounded-md font-medium text-slate-300 hover:text-white hover:bg-slate-700" id="tab-6" onclick="switchStep(6)">6. Resolution Desk (6m)</button></div>
+</nav>
+</header>
+<!-- MAIN CONTAINER -->
+<main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8"><section class="step-section active" id="step-0"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div>
+<span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">LESSON 1.4.7 OVERVIEW</span>
+<h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Handling Customer Requests &amp; Service Issues</h2>
+</div>
+<div class="text-right">
+<span class="text-sm text-slate-500 block">Total Duration</span>
+<span class="text-xl font-bold text-slate-800">76 Minutes</span>
+</div>
+</div>
+<p class="text-slate-600 leading-relaxed mb-6">Welcome to Day 4 asynchronous practice. Work through a realistic customer-service shift: use professional politeness, modals, status updates, empathy, and de-escalation to resolve requests responsibly. Complete the Resolution Desk challenge at the end.</p>
+<!-- Objectives Grid -->
+<div class="grid md:grid-cols-3 gap-4 mb-8">
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-brand-600 font-bold text-lg mb-1">01. Communicate</div>
+<p class="text-xs text-slate-600">Respond with empathy, polite language and clear status updates during customer interactions.</p>
+</div>
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-brand-600 font-bold text-lg mb-1">02. Interpret</div>
+<p class="text-xs text-slate-600">Analyze a B1-level service case and an escalated call, identifying concerns, constraints and next steps.</p>
+</div>
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-brand-600 font-bold text-lg mb-1">03. Resolve</div>
+<p class="text-xs text-slate-600">Use accurate modals and professional follow-ups to handle issues without unsupported promises.</p>
+</div>
+</div>
+<!-- Time Breakdown Table -->
+<h3 class="font-bold text-slate-800 text-lg mb-3">Lesson Roadmap</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs sm:text-sm border-collapse">
+<thead>
+<tr class="bg-slate-100 text-slate-700">
+<th class="p-3 rounded-l-lg">Stage</th>
+<th class="p-3">Focus Area</th>
+<th class="p-3">Time</th>
+<th class="p-3 rounded-r-lg">Activity Output</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200"><tr><td class="p-3 font-semibold text-slate-800">1</td><td class="p-3 text-slate-600">Speaking · Customer request simulation</td><td class="p-3 text-slate-500">15 min</td><td class="p-3 text-slate-600">ELSA speaking practice + results screenshot</td></tr><tr><td class="p-3 font-semibold text-slate-800">2</td><td class="p-3 text-slate-600">Grammar · Modals and professional language</td><td class="p-3 text-slate-500">18 min</td><td class="p-3 text-slate-600">12 multiple-choice + 8 applied tasks</td></tr><tr><td class="p-3 font-semibold text-slate-800">3</td><td class="p-3 text-slate-600">Reading · Delayed service request case file</td><td class="p-3 text-slate-500">12 min</td><td class="p-3 text-slate-600">10 comprehension answers</td></tr><tr><td class="p-3 font-semibold text-slate-800">4</td><td class="p-3 text-slate-600">Listening · Escalated customer call</td><td class="p-3 text-slate-500">15 min</td><td class="p-3 text-slate-600">10 comprehension answers + shadowing</td></tr><tr><td class="p-3 font-semibold text-slate-800">5</td><td class="p-3 text-slate-600">Writing · Status update and follow-up</td><td class="p-3 text-slate-500">10 min</td><td class="p-3 text-slate-600">90–120 word professional response</td></tr><tr><td class="p-3 font-semibold text-slate-800">6</td><td class="p-3 text-slate-600">The Resolution Desk · Integrated challenge</td><td class="p-3 text-slate-500">6 min</td><td class="p-3 text-slate-600">3 customer-service decisions</td></tr></tbody>
+</table>
+</div>
+<div class="mt-8 text-center">
+<button class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl text-base shadow-md transition-all" onclick="switchStep(1)">Start Lesson: Step 1 (Speaking) →</button>
+</div>
+</div></section><section class="step-section" id="step-1"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6"><span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">01 · 15 min</span><h2 class="mt-3">Handling a Customer Request</h2><p>Imagine you are a customer support agent. A customer has contacted you twice because their service request has not been resolved. Record a <strong>2–3 minute</strong> response as if you were speaking directly to them.</p><div class="p-4 bg-slate-50 border border-slate-200 rounded-xl my-4"><strong>Customer:</strong> “I submitted my request on Monday. Yesterday I was told someone would contact me, but I haven't heard anything. I need this sorted out before Friday. Can you tell me what's happening?”</div><p><strong>Include all five elements:</strong> acknowledge the inconvenience; summarize the issue; explain what you can verify versus what is still uncertain; offer a realistic next step; and explain how you will follow up. Use at least two modals and two professional expressions.</p><a class="homework-action inline-block my-4" href="https://speechanalyzer.elsaspeak.com/" rel="noopener noreferrer" target="_blank">🎙 Open ELSA Speech Analyzer ↗</a><p class="text-sm text-slate-600">Record in ELSA, review your pronunciation and fluency feedback, then <strong>take a screenshot of your ELSA Speech Analyzer results</strong>. Send the screenshot through <strong>Discord, WhatsApp, or whichever platform your trainer instructs you to use</strong>. Make sure the results are visible and readable. The ELSA site may require sign-in.</p><div class="mt-4" id="speakingChecks"></div><button class="homework-action" onclick="checkSpeaking()">Check speaking checklist</button><div aria-live="polite" class="feedback" id="speakingFeedback"></div><div class="mt-8 flex justify-between"><button class="text-slate-500 hover:text-slate-700 font-medium text-sm" onclick="switchStep(0)">← Back</button><button class="text-brand-600 hover:text-brand-800 font-bold text-sm" onclick="switchStep(2)">Next Section →</button></div></div></section><section class="step-section" id="step-2"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6"><span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">02 · 18 min</span><h2 class="mt-3">Modals Lab: Choose, Build &amp; Correct</h2><p>Practice modals in three ways: <strong>choose</strong> the best customer-service response, <strong>unscramble</strong> sentences, and <strong>correct</strong> inaccurate wording. Pay attention to modal + base verb, meaning, politeness, and promises you can actually keep.</p><div id="grammarQs"></div><button class="homework-action" onclick="gradeSet('grammar')">Check all 12 answers</button><button class="homework-action secondary" onclick="resetSet('grammar')">Reset</button><div class="mt-8 border-t border-slate-200 pt-6" id="modalBuildLab"><h3 class="mb-2">Part B · Unscramble the Sentence</h3><p>Tap the word tiles in the correct order to build a professional sentence. Select <strong>Check</strong> for feedback or <strong>Clear</strong> to try again.</p><div id="unscrambleQs"></div><div class="mt-6"><h3 class="mb-2">Part C · Correct the Agent's Message</h3><p>Each sentence contains a modal error. Rewrite the <strong>entire sentence</strong> correctly. Keep the original meaning and professional tone.</p><div id="modalCorrectionQs"></div></div><button class="homework-action" onclick="checkModalLab()">Check Parts B &amp; C</button><button class="homework-action secondary" onclick="resetModalLab()">Reset Parts B &amp; C</button><div aria-live="polite" class="feedback" id="modalLabFeedback"></div></div><div aria-live="polite" class="feedback" id="grammarFeedback"></div><div class="mt-8 flex justify-between"><button class="text-slate-500 hover:text-slate-700 font-medium text-sm" onclick="switchStep(1)">← Back</button><button class="text-brand-600 hover:text-brand-800 font-bold text-sm" onclick="switchStep(3)">Next Section →</button></div></div></section><section class="step-section" id="step-3"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6"><span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">03 · 12 min</span><h2 class="mt-3">A Delayed Service Request</h2><p>Read the case file carefully. Some answers require you to connect information across paragraphs or infer why a particular response is appropriate. Then answer all <strong>10 questions</strong>.</p><article class="p-5 bg-slate-50 rounded-xl border border-slate-200 my-4"><h3>Case File: A Delayed Service Request</h3><p><strong>To:</strong> Customer Support Team<br/><strong>From:</strong> Priya Shah, Service Operations<br/><strong>Subject:</strong> SR-4821 | Account access request | Thursday, 10:15 AM</p><p>On Monday morning, customer Daniel Reed submitted a request to restore access to his online account after changing his phone. The first agent confirmed his identity and forwarded the case to the technical team. An automated email told Daniel that most requests are reviewed within two business days, but it did not guarantee a resolution date.</p><p>On Tuesday afternoon, the technical team found that the new phone number had not been fully verified. They asked the support team to request an additional security check. Unfortunately, the note was added to the internal case file but no one contacted Daniel. When he called again on Wednesday, an agent told him someone would follow up shortly, without checking whether the additional verification had been completed.</p><p>Daniel has now called for the third time. He is frustrated because he needs access before a payment deadline on Friday. The case is still marked <strong>Pending Customer Verification</strong>, although Daniel does not know that a verification step is required. The technical team can continue once the identity check is completed, but it cannot promise that access will be restored before Friday.</p><p>Priya has assigned the current agent three tasks: explain the outstanding verification step without requesting sensitive details through an insecure channel; send Daniel the approved verification instructions; and document a follow-up for <strong>3:00 PM today</strong>. If verification is completed, the agent should notify the technical team and provide a new status update. If it is not completed, the agent should explain what is still needed and when the next update can be expected.</p><p>Priya reminds the team: “Acknowledge the inconvenience, distinguish what has happened from what may happen next, and never guarantee a deadline unless the responsible team has confirmed it.”</p></article><div id="readingQs"></div><button class="homework-action" onclick="gradeSet('reading')">Check all 10 answers</button><button class="homework-action secondary" onclick="resetSet('reading')">Reset</button><div aria-live="polite" class="feedback" id="readingFeedback"></div><div class="mt-8 flex justify-between"><button class="text-slate-500 hover:text-slate-700 font-medium text-sm" onclick="switchStep(2)">← Back</button><button class="text-brand-600 hover:text-brand-800 font-bold text-sm" onclick="switchStep(4)">Next Section →</button></div></div></section><section class="step-section" id="step-4"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6"><span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">04 · 15 min</span><h2 class="mt-3">An Escalated Customer Call</h2><div class="p-4 bg-slate-50 rounded-xl border border-slate-200"><strong>Audio supplied by your trainer</strong><p>Listen to a customer and an agent discussing an unresolved account-access request. First, identify the problem and the customer's concern. On your second listen, focus on what is confirmed, what is uncertain, and what the agent promises to do. Answer the questions <strong>before</strong> opening the transcript.</p></div><div class="mt-4" id="listeningQs"></div><button class="homework-action" onclick="gradeSet('listening')">Check all 10 answers</button><button class="homework-action secondary" onclick="resetSet('listening')">Reset</button><div aria-live="polite" class="feedback" id="listeningFeedback"></div><details class="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-200"><summary class="font-semibold cursor-pointer">Reveal transcript after listening</summary><div class="mt-3"><p><strong>Agent:</strong> Thank you for calling Northgate Support. My name is Taylor. How may I help you today?</p><p><strong>Customer:</strong> I’ve already called twice about my account access. I was told someone would get back to me, but nobody did. I have a payment due tomorrow, and this delay is becoming a serious problem.</p><p><strong>Agent:</strong> I understand why you’re frustrated, especially with a deadline approaching. I’m sorry we haven’t kept you updated. May I take a moment to review the notes on your request?</p><p><strong>Customer:</strong> Yes, but I don’t want another vague promise. Can you actually fix it today?</p><p><strong>Agent:</strong> I can confirm that the technical team reviewed your request on Tuesday. They identified an additional verification step, but it appears we didn’t explain that to you. I apologize for the lack of communication.</p><p><strong>Customer:</strong> So you’re saying I have to do something else? Why didn’t anyone tell me yesterday?</p><p><strong>Agent:</strong> You should have been informed earlier. I can send the approved verification instructions through our secure channel now. Once you complete that step, I’ll notify the technical team immediately.</p><p><strong>Customer:</strong> If I do it this morning, will I definitely have access by tomorrow?</p><p><strong>Agent:</strong> I don’t want to give you an inaccurate guarantee. Completing verification will allow the team to continue, but the restoration time hasn’t been confirmed. What I can promise is a status update by 3:00 PM today, even if the issue is still being investigated.</p><p><strong>Customer:</strong> All right. Could you explain where I’ll find those instructions?</p><p><strong>Agent:</strong> Of course. Please sign in to the secure customer portal using your usual address. You should see a message titled “Additional Verification Required.” Do not send your password or verification code by email.</p><p><strong>Customer:</strong> I can do that. What happens if the message doesn’t appear?</p><p><strong>Agent:</strong> Please let us know through the secure support form. We can check whether the message was delivered and arrange another approved method. I’ll also document our conversation so you won’t have to repeat everything on your next call.</p><p><strong>Customer:</strong> Thank you. I’m still disappointed, but at least I know what needs to happen.</p><p><strong>Agent:</strong> That’s understandable. I’m sorry for the inconvenience, and I appreciate the opportunity to help move this forward.</p></div></details><h3 class="mt-5">Shadowing practice</h3><p>Replay the audio and shadow these five phrases. Focus on empathetic intonation, sentence stress and natural rhythm.</p><ol class="list-decimal ml-6 mb-3"><li>I understand why you're frustrated, especially with a deadline approaching.</li><li>May I take a moment to review the notes on your request?</li><li>I don't want to give you an inaccurate guarantee.</li><li>What I can promise is a status update by 3:00 PM today.</li><li>I'll also document our conversation so you won't have to repeat everything.</li></ol><label class="flex gap-2"><input id="shadowDone" type="checkbox"/> I practiced all five phrases aloud.</label><div class="mt-8 flex justify-between"><button class="text-slate-500 hover:text-slate-700 font-medium text-sm" onclick="switchStep(3)">← Back</button><button class="text-brand-600 hover:text-brand-800 font-bold text-sm" onclick="switchStep(5)">Next Section →</button></div></div></section><section class="step-section" id="step-5"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6"><span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">05 · 10 min</span><h2 class="mt-3">Write a Customer Follow-Up Email</h2><p><strong>Your role:</strong> You are a customer support agent. You have just spoken with Daniel, who has called three times because he still cannot access his online account.</p><div class="p-5 bg-slate-50 border border-slate-200 rounded-xl my-4"><h3 class="mb-3">Customer case: What you know</h3><ul class="list-disc ml-6 space-y-2"><li>Daniel changed his phone and requested account access on Monday.</li><li>The technical team reviewed the request, but an <strong>additional identity verification</strong> is still required.</li><li>Daniel has <strong>not completed</strong> the verification yet because no one explained the next step.</li><li>He needs access before Friday, but <strong>the restoration date is not confirmed</strong>.</li><li>You can send the approved instructions through the <strong>secure customer portal</strong>.</li><li>You will provide a status update <strong>by 3:00 PM today</strong>, even if the issue remains unresolved.</li></ul></div><p><strong>Your task:</strong> Write the email you would send to Daniel <em>after the call</em>. Your goal is to rebuild trust, explain the current status, and make the next steps easy to understand.</p><div class="p-5 rounded-xl border border-slate-200 my-4"><h3 class="mb-3">Follow this 5-part structure</h3><ol class="list-decimal ml-6 space-y-2"><li><strong>Greeting + empathy:</strong> Address Daniel and acknowledge the frustrating delay.</li><li><strong>Current status:</strong> Explain that the case is waiting for additional verification.</li><li><strong>Customer action:</strong> Ask him politely to follow the instructions in the secure portal.</li><li><strong>Your commitment:</strong> Explain what you can do next and promise an update by 3:00 PM today.</li><li><strong>Closing:</strong> Thank him for his patience and end professionally.</li></ol></div><p><strong>Write 90–120 words.</strong> Include at least one appropriate modal (<em>can, could, may, should, must</em>). <strong>Do not</strong> guarantee account access before Friday or request passwords or verification codes by email.</p><details class="my-4"><summary>Need help getting started? See a sentence starter</summary><p class="mt-2">Dear Daniel, thank you for speaking with me today. I understand how frustrating this delay has been, especially with your payment deadline approaching...</p><p class="text-sm text-slate-600">Continue in your own words. Do not copy a complete model email.</p></details><label class="font-semibold block" for="writingResponse">Your status update</label><textarea class="homework-input" id="writingResponse" placeholder="Subject: Update on your account access request..." rows="8"></textarea><button class="homework-action" onclick="checkWriting()">Check writing requirements</button><div aria-live="polite" class="feedback" id="writingFeedback"></div><p class="text-sm text-slate-600">The automated check can identify length and selected language features only. Your trainer will review factual accuracy, empathy and tone.</p><div class="mt-8 flex justify-between"><button class="text-slate-500 hover:text-slate-700 font-medium text-sm" onclick="switchStep(4)">← Back</button><button class="text-brand-600 hover:text-brand-800 font-bold text-sm" onclick="switchStep(6)">Next Section →</button></div></div></section><section class="step-section" id="step-6"><div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-6"><span class="inline-block bg-brand-100 text-brand-800 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide">06 · 6 min</span><h2 class="mt-3">The Resolution Desk</h2><p>Finish your shift by choosing the <strong>best</strong> response in three realistic situations. Both choices may sound reasonable; select the one that communicates most accurately and professionally.</p><div id="challengeQs"></div><button class="homework-action" onclick="gradeSet('challenge')">Check all 3 decisions</button><button class="homework-action secondary" onclick="resetSet('challenge')">Reset</button><div aria-live="polite" class="feedback" id="challengeFeedback"></div><h3 class="mt-8">Homework Submission Summary</h3><p>Review your progress and send a <strong>screenshot of your ELSA Speech Analyzer results</strong> via Discord, WhatsApp, or your trainer-designated platform, along with any requested written work.</p><div class="p-4 bg-slate-50 rounded-xl border border-slate-200" id="summary"></div><button class="homework-action" onclick="renderSummary()">Refresh summary</button><div class="mt-8 flex justify-between"><button class="text-slate-500 hover:text-slate-700 font-medium text-sm" onclick="switchStep(5)">← Back</button><button class="text-brand-600 hover:text-brand-800 font-bold text-sm" onclick="switchStep(6)">Finish ✓</button></div></div></section></main>
+<!-- Master bottom navigation: available on every lesson screen -->
+<div aria-label="Lesson navigation" class="master-bottom-nav no-print">
+<button disabled="" id="previous-section" onclick="switchStep(currentStep-1)" type="button">← Back</button>
+<span id="bottom-section-label" style="color:#54595f;font-size:14px;font-weight:500">Overview · 1 of 7</span>
+<button id="next-section" onclick="switchStep(currentStep+1)" type="button">Next →</button>
+</div>
+<!-- FOOTER -->
+<footer class="bg-[#2a2c2e] border-t border-[#54595f] text-slate-400 text-xs py-6 text-center no-print mt-auto">
+<div class="max-w-7xl mx-auto px-4">
+<p>10 Week English Program | Lesson 1.4.7: Asynchronous Homework (CEFR A2–B1)</p>
+<p class="text-slate-500 text-[10px] mt-1">Independent learning · 76 minutes · Trainer-guided audio distribution</p>
+</div>
+</footer>
+<!-- JAVASCRIPT LOGIC -->
+<script>const $=id=>document.getElementById(id);let currentStep=0;let progress={};const banks={"grammar": [["You need to ask permission to review a customer’s account. Which is most appropriate?", ["May I review your account details?", "Must I review your account details?", "I might review your account details."], 0, "May I asks for permission; must expresses necessity."], ["The policy requires identity verification before access is restored.", ["The customer might verify their identity first.", "The customer must verify their identity first.", "The customer could have verified their identity."], 1, "Must expresses a required step."], ["The technical team has not confirmed a completion date.", ["The issue will be fixed by Friday.", "The issue must be fixed by Friday.", "The issue may be resolved by Friday, but we cannot confirm that yet."], 2, "May communicates possibility without a guarantee."], ["Choose the most natural polite request for a brief wait.", ["Would you mind holding for a moment?", "Would you mind to hold for a moment?", "Would you mind hold for a moment?"], 0, "Would you mind is followed by an -ing verb."], ["The agent is able to send secure instructions now.", ["I should send the instructions now.", "I can send the instructions now.", "I must have sent the instructions now."], 1, "Can communicates current ability."], ["Choose the best advice about protecting account information.", ["You might not share your password by email.", "You would not share your password by email.", "You should not share your password by email."], 2, "Should not gives clear advice without claiming it is an optional possibility."], ["Which statement accurately distinguishes certainty from possibility?", ["We can confirm the case is pending; restoration could take additional time.", "We could confirm the case is pending; restoration will happen today.", "We must confirm restoration today because the case is pending."], 0, "Can confirm reports a known fact; could expresses uncertainty."], ["A customer asks for an immediate solution, but the timeline is unknown.", ["We will definitely solve it today.", "We can investigate today, but we cannot guarantee when it will be resolved.", "We might have already solved it, so please wait."], 1, "The agent distinguishes an action they can take from an outcome they cannot promise."], ["Which is a correct question about permission?", ["Could I to send you the instructions?", "Could I sending you the instructions?", "Could I send you the instructions?"], 2, "Modal + base verb: could I send."], ["A customer has completed verification. What is the most accurate next step?", ["We can notify the technical team so they can continue reviewing your request.", "We must restore your access immediately.", "We may confirm that your account is already active."], 0, "Completing verification allows further review; it does not prove restoration."], ["Which modal best expresses a reasonable recommendation?", ["You must check your spam folder, even if the message was delivered elsewhere.", "You could check your secure portal for the verification notice.", "You will check your secure portal now."], 1, "Could offers a suggestion without an unnecessary demand."], ["Choose the most appropriate status-update statement.", ["Your case should be closed by now, so no further action is needed.", "Your case will be closed before Friday because we have escalated it.", "Your case is still under review; we should have another update after the team responds."], 2, "Should signals expectation, not a guaranteed result."]], "reading": [["Why did Daniel initially contact support?", ["He had changed his phone and could not access his account.", "He had missed a payment and wanted a refund.", "He needed to update his mailing address."], 0, "The first paragraph identifies an access problem after a phone change."], ["What did the first automated email actually promise?", ["Restoration within two business days.", "A typical review timeframe, not a guaranteed resolution date.", "A call from a technician on Wednesday."], 1, "The email described a usual review window, not a guaranteed outcome."], ["What prevented the technical team from continuing?", ["An incorrect payment deadline.", "A missing support ticket number.", "Incomplete verification of the new phone number."], 2, "The technical team identified a verification requirement."], ["Why was the Wednesday agent’s response problematic?", ["The agent promised follow-up without confirming the required step.", "The agent asked the technical team to review the case.", "The agent documented the customer’s concern."], 0, "A promise was made without checking the case status."], ["What does “Pending Customer Verification” mean in this case?", ["The technical team has already restored access.", "The customer must complete a security step before work can continue.", "The case has been permanently closed."], 1, "The next action depends on the customer completing verification."], ["What is the customer’s main concern?", ["The wording of the automated email.", "The location of the technical team.", "Access before a payment deadline on Friday."], 2, "The Friday deadline raises the urgency of the issue."], ["Which action should the agent take first?", ["Explain the outstanding verification step and provide approved instructions.", "Guarantee the account will be restored before Friday.", "Ask Daniel to email his password for faster processing."], 0, "The agent must clarify and support secure verification."], ["What is scheduled for 3:00 PM?", ["The guaranteed restoration of access.", "A follow-up status check with the customer.", "A new customer identity interview."], 1, "The case file specifies a follow-up for 3:00 PM today."], ["If Daniel completes verification, what should happen next?", ["The case should automatically close.", "Daniel should submit another unrelated ticket.", "The agent should notify the technical team and update Daniel."], 2, "Completion allows the technical team to resume its work."], ["What principle best summarizes Priya’s guidance?", ["Separate verified facts from uncertain outcomes.", "Avoid giving customers any information until the case closes.", "Promise deadlines to reassure frustrated customers."], 0, "Accurate updates avoid unsupported guarantees."]], "listening": [["Why is the customer particularly concerned about the delay?", ["They have a payment due tomorrow.", "They are leaving the country today.", "They want to change their service plan."], 0, "The payment deadline increases urgency."], ["What does the agent do before discussing next steps?", ["Promise a same-day fix.", "Ask permission to review the case notes.", "Transfer the call without explanation."], 1, "The agent asks to review the notes."], ["What had the technical team discovered on Tuesday?", ["The customer’s account was already active.", "The payment had been cancelled.", "An additional verification step was required."], 2, "The technical review identified an outstanding verification step."], ["What does the agent acknowledge went wrong?", ["The team did not explain the verification requirement to the customer.", "The customer submitted the wrong request.", "The secure portal was unavailable for all users."], 0, "The agent accepts the communication failure."], ["What can the agent do immediately?", ["Guarantee restoration by tomorrow.", "Send approved instructions through a secure channel.", "Remove the security requirement."], 1, "Secure instructions can be sent now."], ["Why does the agent avoid promising access by tomorrow?", ["The customer has not called enough times.", "The agent is not allowed to discuss deadlines at all.", "The restoration time has not been confirmed."], 2, "An unconfirmed timeline should not be guaranteed."], ["What specific commitment does the agent make?", ["Provide a status update by 3:00 PM today.", "Restore the account at 3:00 PM today.", "Arrange a payment extension by 3:00 PM."], 0, "The promised update is not a promised resolution."], ["Where should the customer find the verification instructions?", ["In a regular email requesting a password.", "In the secure customer portal.", "On a public social media page."], 1, "The instructions are in the secure portal."], ["What should the customer do if the message does not appear?", ["Create a second account.", "Send the verification code by email.", "Contact support using the secure form."], 2, "The secure form allows support to investigate delivery."], ["What does the agent promise to document?", ["The conversation, so the customer will not need to repeat everything.", "A guaranteed completion date for the next morning.", "The customer’s password and verification code."], 0, "Documenting the conversation supports continuity."]], "challenge": [["A customer says: “You promised a callback yesterday.” The case notes show no confirmed callback time. What is the best response?", ["I can see why that was frustrating. I’ll review the notes and confirm when you can expect an update.", "I understand your frustration. The team probably tried calling, so you may have missed it."], 0, "Acknowledge the concern and verify facts without assuming what happened."], ["You can confirm that a request was escalated, but not when it will be resolved.", ["Your request was escalated, so it should definitely be resolved by Friday.", "Your request has been escalated. I can confirm that step, but the resolution time is still being reviewed."], 1, "Escalation is confirmed; a resolution date is not."], ["A customer is upset and asks you to remove a required security check.", ["I understand this is inconvenient. We still need the verification step, but I can guide you through the secure process.", "I understand this is inconvenient. We can skip verification this time if it helps you meet your deadline."], 0, "Empathy does not mean bypassing required security procedures."]]};
+function switchStep(n){if(n<0||n>6)return;currentStep=n;document.querySelectorAll('.step-section').forEach((el,i)=>el.classList.toggle('active',i===n));document.querySelectorAll('.nav-tab').forEach((el,i)=>{el.classList.toggle('bg-brand-600',i===n);el.classList.toggle('text-white',i===n);el.classList.toggle('text-slate-300',i!==n);el.setAttribute('aria-current',i===n?'step':'false')});$('progress-bar').style.width=((n+1)/7*100)+'%';$('progress-track').setAttribute('aria-valuenow',n+1);$('previous-section').disabled=n===0;$('next-section').disabled=n===6;$('next-section').textContent=n===6?'Completed ✓':'Next →';$('bottom-section-label').textContent=document.querySelectorAll('.nav-tab')[n].textContent.trim()+' · '+(n+1)+' of 7';window.scrollTo({top:0,behavior:'smooth'});if(n===6)renderSummary()}
+function renderSet(k){const el=$(k+'Qs');el.innerHTML='';banks[k].forEach((q,i)=>{const box=document.createElement('div');box.className='question-card';const h=document.createElement('p');h.className='font-semibold';h.textContent=(i+1)+'. '+q[0];box.append(h);q[1].forEach((o,j)=>{const label=document.createElement('label');const inp=document.createElement('input');inp.type='radio';inp.name=k+i;inp.value=j;label.append(inp,document.createTextNode(o));box.append(label)});const why=document.createElement('div');why.className='why hidden';why.id=k+'Why'+i;box.append(why);el.append(box)})}
+function gradeSet(k){let score=0,answered=0;banks[k].forEach((q,i)=>{const sel=document.querySelector('input[name="'+k+i+'"]:checked'),why=$(k+'Why'+i);why.classList.remove('hidden');if(sel){answered++;const ok=Number(sel.value)===q[2];if(ok)score++;why.style.borderLeft='4px solid '+(ok?'#16803a':'#b42318');why.textContent=(ok?'Correct. ':'Not quite. ')+q[3]}else{why.style.borderLeft='4px solid #d97706';why.textContent='Choose an answer to receive feedback.'}});$(k+'Feedback').textContent='Score: '+score+' / '+banks[k].length+' ('+answered+' answered).';progress[k]={score,answered,total:banks[k].length};renderSummary()}
+function resetSet(k){banks[k].forEach((q,i)=>{document.querySelectorAll('input[name="'+k+i+'"]').forEach(x=>x.checked=false);$(k+'Why'+i).classList.add('hidden')});$(k+'Feedback').textContent='';delete progress[k];renderSummary()}
+const speaking=['I acknowledged the customer’s concern and apologized appropriately.','I distinguished confirmed information from uncertainty.','I used at least two modals accurately.','I offered a realistic next step and follow-up.','I reviewed my recording and ELSA feedback.','I took a readable screenshot of my ELSA results and sent it through the platform instructed by my trainer.'];
+function checkSpeaking(){let count=speaking.filter((_,i)=>$('sp'+i).checked).length;progress.speaking=count===6;$('speakingFeedback').textContent=count+'/6 checklist items complete. Take a screenshot of your ELSA results and send it via Discord, WhatsApp, or the platform instructed by your trainer.';renderSummary()}
+function checkWriting(){const text=$('writingResponse').value.trim(),count=(text.match(/\b[\w'-]+\b/g)||[]).length;const hasEmpathy=/sorry|understand|apologi[sz]|inconvenien|frustrat/i.test(text);const hasTime=/3(?::00)?\s*p\.?m\.?|three\s*(?:o'clock|pm)/i.test(text);const hasVerify=/verif|secure|portal/i.test(text);const hasFollow=/update|follow.up|contact|reach out/i.test(text);let notes=[];if(count<90||count>120)notes.push('Aim for 90–120 words.');if(!hasEmpathy)notes.push('Include empathy.');if(!hasTime)notes.push('Mention the 3:00 PM follow-up.');if(!hasVerify)notes.push('Explain secure verification.');if(!hasFollow)notes.push('State how you will follow up.');progress.writing=notes.length===0;$('writingFeedback').textContent=count+' words. '+(notes.length?notes.join(' '):'Surface requirements met. Your trainer still needs to review accuracy and tone.');renderSummary()}
+function renderSummary(){const names=[['speaking','Speaking (ELSA)'],['grammar','Modals'],['reading','Reading'],['listening','Listening'],['writing','Writing'],['challenge','Resolution Desk']];$('summary').innerHTML=names.map(([k,n])=>'<p><strong>'+n+':</strong> '+(progress[k]===undefined?'Not checked':typeof progress[k]==='boolean'?(progress[k]?'Checklist complete':'Needs review'):(progress[k].score+'/'+progress[k].total+' correct'))+'</p>').join('')+'<p class="mt-2 text-sm text-slate-600">Remember to submit a screenshot of your ELSA results through Discord, WhatsApp, or your trainer-designated platform, plus any requested written response.</p>'}
+['grammar','reading','listening','challenge'].forEach(renderSet);$('speakingChecks').innerHTML=speaking.map((t,i)=>'<label class="flex items-start gap-2 my-2"><input type="checkbox" id="sp'+i+'">'+t+'</label>').join('');$('writingResponse').addEventListener('input',()=>{delete progress.writing;renderSummary()});renderSummary();
+
+
+const modalScrambles=[
+ {words:['Could','you','please','confirm','your','account','number?'],answer:'Could you please confirm your account number?',why:'Could you please + base verb makes a polite request.'},
+ {words:['We','may','need','additional','verification','before','proceeding.'],answer:'We may need additional verification before proceeding.',why:'May + base verb expresses possibility, not a guarantee.'},
+ {words:['You','must','complete','verification','through','the','secure','portal.'],answer:'You must complete verification through the secure portal.',why:'Must + base verb describes a required step.'},
+ {words:['I','can','provide','an','update','by','3:00','PM','today.'],answer:'I can provide an update by 3:00 PM today.',why:'Can + base verb expresses what the agent is able to do.'}
+];
+const modalCorrections=[
+ {bad:'You must to complete the verification first.',good:'You must complete the verification first.',why:'After must, use the base verb without to.'},
+ {bad:'Could you confirming the email address?',good:'Could you confirm the email address?',why:'After could you, use the base verb.'},
+ {bad:'We might to need more time to investigate.',good:'We might need more time to investigate.',why:'Might takes the base verb, without to.'},
+ {bad:'I can sends you an update by 3:00 PM.',good:'I can send you an update by 3:00 PM.',why:'After can, use the base verb without -s.'}
+];
+// Keep each word pool deliberately scrambled while retaining original word indices for grading.
+const modalTileOrder=modalScrambles.map((q,i)=>{
+ const permutations=[[4,1,6,3,0,5,2],[3,6,1,4,0,5,2],[5,2,7,0,4,1,6,3],[5,2,8,0,4,7,1,6,3]];
+ return permutations[i];
+});
+let modalChoices=modalScrambles.map(()=>[]);
+function renderModalLab(){
+ const root=$('unscrambleQs');root.innerHTML='';
+ modalScrambles.forEach((q,i)=>{
+  const box=document.createElement('div');box.className='question-card';
+  const title=document.createElement('p');title.className='font-semibold';title.textContent=(i+1)+'. Build the sentence';box.append(title);
+  const picked=document.createElement('div');picked.id='modalPicked'+i;picked.className='min-h-[52px] p-3 bg-white border border-slate-300 rounded-lg my-3 flex flex-wrap gap-2';picked.setAttribute('aria-label','Selected words');box.append(picked);
+  const pool=document.createElement('div');pool.id='modalPool'+i;pool.className='flex flex-wrap gap-2';box.append(pool);
+  const controls=document.createElement('div');controls.className='mt-2';
+  const check=document.createElement('button');check.className='homework-action';check.textContent='Check';check.onclick=()=>checkOneScramble(i);
+  const clear=document.createElement('button');clear.className='homework-action secondary';clear.textContent='Clear';clear.onclick=()=>{modalChoices[i]=[];paintScramble(i);$('modalSFeedback'+i).textContent='';delete progress.modalLab;renderSummary()};controls.append(check,clear);box.append(controls);
+  const fb=document.createElement('div');fb.id='modalSFeedback'+i;fb.className='feedback';fb.setAttribute('aria-live','polite');box.append(fb);root.append(box);paintScramble(i)
+ });
+ const corrections=$('modalCorrectionQs');corrections.innerHTML='';modalCorrections.forEach((q,i)=>{
+  const box=document.createElement('div');box.className='question-card';
+  const p=document.createElement('p');p.className='font-semibold';p.textContent=(i+1)+'. '+q.bad;box.append(p);
+  const input=document.createElement('input');input.id='modalFix'+i;input.type='text';input.className='homework-input';input.placeholder='Write the complete corrected sentence';input.setAttribute('aria-label','Correct sentence '+(i+1));input.addEventListener('input',()=>{delete progress.modalLab;renderSummary()});box.append(input);
+  const fb=document.createElement('div');fb.id='modalCF'+i;fb.className='feedback';fb.setAttribute('aria-live','polite');box.append(fb);corrections.append(box)
+ });
+}
+function paintScramble(i){const q=modalScrambles[i];const pool=$('modalPool'+i),picked=$('modalPicked'+i);pool.innerHTML='';picked.innerHTML='';
+ modalTileOrder[i].forEach(j=>{const word=q.words[j];const b=document.createElement('button');b.type='button';b.textContent=word;b.className='px-3 py-2 border border-slate-300 rounded-lg bg-white hover:bg-brand-100';b.disabled=modalChoices[i].includes(j);b.onclick=()=>{modalChoices[i].push(j);paintScramble(i);delete progress.modalLab;renderSummary()};pool.append(b)});
+ modalChoices[i].forEach((j,k)=>{const b=document.createElement('button');b.type='button';b.textContent=q.words[j]+' ×';b.className='px-3 py-2 rounded-lg bg-brand-100 text-brand-800';b.title='Remove this word';b.onclick=()=>{modalChoices[i].splice(k,1);paintScramble(i);delete progress.modalLab;renderSummary()};picked.append(b)});
+ if(!modalChoices[i].length)picked.textContent='Select word tiles below...'
+}
+function normalizeModal(s){return s.toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9: ]/g,'').replace(/\s+/g,' ').trim()}
+function checkOneScramble(i){const q=modalScrambles[i],actual=modalChoices[i].map(j=>q.words[j]).join(' '),ok=normalizeModal(actual)===normalizeModal(q.answer);const fb=$('modalSFeedback'+i);fb.style.borderLeft='4px solid '+(ok?'#16803a':'#b42318');fb.textContent=ok?'✓ Correct. '+q.why:'Not quite. Review word order and modal + base verb. '+q.why;return ok}
+function checkModalLab(){let score=0;modalScrambles.forEach((_,i)=>{if(checkOneScramble(i))score++});modalCorrections.forEach((q,i)=>{const value=$('modalFix'+i).value.trim(),ok=normalizeModal(value)===normalizeModal(q.good);const fb=$('modalCF'+i);fb.style.borderLeft='4px solid '+(ok?'#16803a':'#b42318');fb.textContent=ok?'✓ Correct. '+q.why:(value?'Check your sentence again. ':'Write your corrected sentence first. ')+q.why;if(ok)score++});progress.modalLab={score,total:8};$('modalLabFeedback').textContent='Applied Modals score: '+score+'/8 · Part A has a separate score.';renderSummary()}
+function resetModalLab(){modalChoices=modalScrambles.map(()=>[]);modalScrambles.forEach((_,i)=>{paintScramble(i);$('modalSFeedback'+i).textContent=''});modalCorrections.forEach((_,i)=>{$('modalFix'+i).value='';$('modalCF'+i).textContent=''});$('modalLabFeedback').textContent='';delete progress.modalLab;renderSummary()}
+const originalRenderSummary=renderSummary;
+renderSummary=function(){originalRenderSummary();const target=$('summary');if(!target)return;const p=document.createElement('p');p.innerHTML='<strong>Applied Modals (8 tasks):</strong> '+(progress.modalLab?progress.modalLab.score+'/8 correct':'Not checked');const anchor=target.querySelectorAll('p')[1];if(anchor)anchor.insertAdjacentElement('afterend',p);else target.append(p)};
+renderModalLab();renderSummary();
+</script></body>
+</html>
